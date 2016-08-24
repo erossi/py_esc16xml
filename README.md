@@ -5,6 +5,7 @@ Simple converter ESC 2016 events from php-json to xml-pentabarf compatibile cale
 https://www.endsummercamp.org/API/ls_sched_talk.php
 
 Please do:
+
 	curl https://www.endsummercamp.org/API/ls_sched_talk.php > esc16.json
 	python3 escjsontoxlm.py
 

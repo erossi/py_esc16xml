@@ -1,10 +1,26 @@
 #/bin/env python3
+#
+# Simple converter ESC 2016 events from php-json to xml-pentabarf.
+# Copyright (C) 2016 Enrico Rossi <e.rossi@tecnobrain.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 import xml.etree.ElementTree as ET
 
 class Day(object):
-    """ A single day
+    """ A single day object
     """
 
     def __init__(self, xmlobj, index, date):
@@ -22,6 +38,8 @@ class Day(object):
 
 class Events(object):
     """ A single event
+
+    Example taken from the fosdem 2016 file.
     <event id="3682">
      <start>09:30</start>
      <duration>00:25</duration>
@@ -110,36 +128,40 @@ def main():
     ET.SubElement(conference, 'timeslot_duration').text = '00:05:00'
 
     # Read the Json file
+    # Better to download from the original URL instead! FIXME
     with open('esc16.json', 'r') as jsonfile:
         jsonobj = json.load(jsonfile)
 
-    # jsonobj is a list of dict
-    for i in jsonobj:
-        for k, v in i.items():
-            print (k, ":", v)
+    # to dump the json:
+    #for i in jsonobj:
+    #    for k, v in i.items():
+    #        print (k, ":", v)
+    #    print ('---')
 
-        print ('---')
-
-    # Print the rooms
-    rooms = {d['linea'] for d in jsonobj}
-    print('rooms:', rooms)
+    # to print the rooms
+    #rooms = {d['linea'] for d in jsonobj}
+    #print('rooms:', rooms)
 
     # scan for the available days
     days = {(d['giorno'], d['data'][:10]) for d in jsonobj}
-    #days = dict((k, v) for k, v in days)
     print ('days:', days)
 
-    # days
+    # Create a dict() of Day object
     day = dict()
 
     for k, v in days:
         day[k] = Day(myxml, k, v)
 
-    # jsonobj is a list of dict
+    # and for each event in the json, add it to the same day object.
     for i in jsonobj:
         Events(day[i['giorno']], i)
 
-    ET.dump(myxml)
+    # to dump the xml
+    #ET.dump(myxml)
+
+    # write the output file
+    # missing the header (FIXME)
+    # <?xml version="1.0" encoding="UTF-8"?>
     ET.ElementTree(myxml).write('output.xml', encoding='utf-8')
 
 # Main
