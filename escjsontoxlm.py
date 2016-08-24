@@ -77,7 +77,14 @@ class Events(object):
         self._start = event['orario'][:5]
         ET.SubElement(self._subxml, 'start').text = self._start
 
-        self._duration = "00:" + event['durata']
+        # Quick fix for those 60 mins event. There shouldn't be any > 120 :)
+        # FIXME or better FIX the json@origin
+
+        if (int(event['durata']) < 60):
+            self._duration = "00:" + event['durata']
+        else:
+            self._duration = "01:" + "%02d" % (int(event['durata']) - 60)
+
         ET.SubElement(self._subxml, 'duration').text = self._duration
 
         ET.SubElement(self._subxml, 'room').text = self._room
