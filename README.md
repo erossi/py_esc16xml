@@ -10,3 +10,6 @@ Please do:
 	python3 escjsontoxlm.py
 
 and see the output.xml generated.
+
+You can use [http://www.toastfreeware.priv.at/confclerk/][ConfClerk]
+or [https://wilmer.gaa.st/main.php/giggity.html][Giggity].
